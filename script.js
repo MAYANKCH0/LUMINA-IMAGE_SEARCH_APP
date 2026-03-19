@@ -1,6 +1,6 @@
-// Unsplash API Access Key
-const accessKey = "UNSPLASH_API_KEY";
-console.log("Lumina App Loaded - Version 1.2");
+// Pixabay API Key (Get yours at https://pixabay.com/api/docs/)
+const pixabayKey = "PIXABAY_API_KEY";
+console.log("Lumina App Loaded - Pixabay Version");
 
 const form = document.getElementById("search-form");
 const searchBox = document.getElementById("search-box");
@@ -131,9 +131,10 @@ async function searchImages() {
     if (page === 1) currentSearchKeyword = searchBox.value;
     if (!currentSearchKeyword) return;
 
-    const url = `https://api.unsplash.com/search/photos?page=${page}&query=${currentSearchKeyword}&per_page=12&client_id=${accessKey.trim()}`;
-
-    console.log("Fetching from Unsplash:", url.replace(accessKey.trim(), "REDACTED_KEY")); // Log for debugging, but hide the key in the console log string for privacy if they share screenshots
+    // Pixabay API URL
+    const url = `https://pixabay.com/api/?key=${pixabayKey}&q=${encodeURIComponent(currentSearchKeyword)}&image_type=photo&page=${page}&per_page=12`;
+    
+    console.log("Fetching from Pixabay:", url.replace(pixabayKey, "REDACTED_KEY"));
 
     suggestionsList.classList.remove("active");
 
@@ -141,14 +142,15 @@ async function searchImages() {
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.errors) {
+        // Pixabay error handling
+        if (data.message) {
             imagesDiv.classList.remove('image-grid');
-            imagesDiv.innerHTML = `<p class="message error-message">Error: ${data.errors[0]}</p>`;
+            imagesDiv.innerHTML = `<p class="message error-message">Error: ${data.message}</p>`;
             loadMoreBtn.style.display = "none";
             return;
         }
 
-        const results = data.results;
+        const results = data.hits; // Pixabay uses 'hits' instead of 'results'
 
         if (page === 1) {
             imagesDiv.innerHTML = "";
@@ -161,11 +163,11 @@ async function searchImages() {
                 card.classList.add("image-card");
 
                 const img = document.createElement("img");
-                img.src = result.urls.regular;
-                img.alt = result.alt_description || "Unsplash Image";
+                img.src = result.webformatURL; // Pixabay's regular size
+                img.alt = result.tags || "Pixabay Image";
 
                 card.addEventListener("click", () => {
-                    modalImage.src = result.urls.regular;
+                    modalImage.src = result.largeImageURL; // Pixabay's high-res
                     modalOverlay.classList.add("active");
                 });
 
@@ -178,8 +180,8 @@ async function searchImages() {
                 downloadBtn.innerHTML = '<i class="ph ph-download-simple"></i>';
                 downloadBtn.title = "Download image";
 
-                const downloadUrl = result.urls.full;
-                const filename = `lumina-${result.id}.jpg`;
+                const downloadUrl = result.largeImageURL;
+                const filename = `lumina-pixabay-${result.id}.jpg`;
                 downloadBtn.addEventListener("click", (e) => downloadImage(e, downloadUrl, filename));
 
                 overlay.appendChild(downloadBtn);

@@ -1,5 +1,5 @@
 // Replace this with your actual Unsplash API Key
-const accessKey = "YOUR_API_KEY";
+const accessKey = "UNSPLASH_API_KEY";
 
 const form = document.getElementById("search-form");
 const searchBox = document.getElementById("search-box");

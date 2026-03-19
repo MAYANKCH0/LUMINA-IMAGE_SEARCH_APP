@@ -1,5 +1,6 @@
-// Replace this with your actual Unsplash API Key
-const accessKey = "UNSPLASH_API_KEY";
+// Get API key from Vercel environment variable
+// Fallback to placeholder for local testing
+const accessKey = window.UNSPLASH_API_KEY || "YOUR_API_KEY";
 
 const form = document.getElementById("search-form");
 const searchBox = document.getElementById("search-box");
@@ -21,8 +22,8 @@ loadMoreBtn.style.display = "none";
 
 // Function to handle fetching and downloading images as a file
 async function downloadImage(e, url, filename) {
-    e.preventDefault(); // Stop standard navigation
-    e.stopPropagation(); // Prevent opening the image modal
+    e.preventDefault();
+    e.stopPropagation();
 
     try {
         const response = await fetch(url);
@@ -47,19 +48,17 @@ function showDefaultSuggestions() {
     renderSuggestions(defaultSuggestions);
 }
 
-// Function to render suggestions to the DOM
+// Function to render suggestions
 function renderSuggestions(suggestions) {
     if (!suggestions || suggestions.length === 0) {
         suggestionsList.classList.remove("active");
         return;
     }
 
-    // Build suggestion HTML
     suggestionsList.innerHTML = suggestions.map(tag =>
         `<li class="suggestion-item"><i class="ph ph-magnifying-glass"></i> ${tag}</li>`
     ).join("");
 
-    // Add click listeners to items
     document.querySelectorAll(".suggestion-item").forEach(item => {
         item.addEventListener("click", () => {
             searchBox.value = item.textContent.trim();
@@ -72,7 +71,7 @@ function renderSuggestions(suggestions) {
     suggestionsList.classList.add("active");
 }
 
-// Function to fetch search suggestions
+// Fetch suggestions from Datamuse API
 async function fetchSuggestions(query) {
     if (!query.trim()) {
         showDefaultSuggestions();
@@ -84,7 +83,6 @@ async function fetchSuggestions(query) {
     try {
         const response = await fetch(url);
         const data = await response.json();
-
         const suggestions = data.map(item => item.word).slice(0, 5);
         renderSuggestions(suggestions);
     } catch (error) {
@@ -92,17 +90,13 @@ async function fetchSuggestions(query) {
     }
 }
 
-// Show suggestions on focus
+// Input & focus listeners for search box
 searchBox.addEventListener("focus", () => {
     const value = searchBox.value.trim();
-    if (!value) {
-        showDefaultSuggestions();
-    } else {
-        fetchSuggestions(value);
-    }
+    if (!value) showDefaultSuggestions();
+    else fetchSuggestions(value);
 });
 
-// Debounce input to avoid spamming the API
 searchBox.addEventListener("input", (e) => {
     const value = e.target.value;
     if (!value.trim()) {
@@ -116,35 +110,30 @@ searchBox.addEventListener("input", (e) => {
 
 // Hide suggestions when clicking outside
 document.addEventListener("click", (e) => {
-    if (!form.contains(e.target)) {
-        suggestionsList.classList.remove("active");
-    }
+    if (!form.contains(e.target)) suggestionsList.classList.remove("active");
 });
 
 // Modal Close Handlers
 modalCloseBtn.addEventListener("click", () => {
     modalOverlay.classList.remove("active");
-    setTimeout(() => { modalImage.src = ""; }, 300); // Clear image after animation
+    setTimeout(() => { modalImage.src = ""; }, 300);
 });
 
 modalOverlay.addEventListener("click", (e) => {
-    // Only close if clicking the dark overlay, not the image itself
     if (e.target === modalOverlay) {
         modalOverlay.classList.remove("active");
         setTimeout(() => { modalImage.src = ""; }, 300);
     }
 });
 
+// Search Images Function
 async function searchImages() {
-    if (page === 1) {
-        currentSearchKeyword = searchBox.value;
-    }
-
-    if (!currentSearchKeyword) return; // Prevent empty searches
+    if (page === 1) currentSearchKeyword = searchBox.value;
+    if (!currentSearchKeyword) return;
 
     const url = `https://api.unsplash.com/search/photos?page=${page}&query=${currentSearchKeyword}&per_page=12&client_id=${accessKey}`;
 
-    suggestionsList.classList.remove("active"); // Hide suggestions when searching
+    suggestionsList.classList.remove("active");
 
     try {
         const response = await fetch(url);
@@ -165,7 +154,7 @@ async function searchImages() {
         }
 
         if (results && results.length > 0) {
-            results.map((result) => {
+            results.forEach(result => {
                 const card = document.createElement("div");
                 card.classList.add("image-card");
 
@@ -173,9 +162,8 @@ async function searchImages() {
                 img.src = result.urls.regular;
                 img.alt = result.alt_description || "Unsplash Image";
 
-                // Add click event for modal preview
                 card.addEventListener("click", () => {
-                    modalImage.src = result.urls.regular; // Show high-res in modal
+                    modalImage.src = result.urls.regular;
                     modalOverlay.classList.add("active");
                 });
 
@@ -212,6 +200,7 @@ async function searchImages() {
     }
 }
 
+// Form and Load More button listeners
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     page = 1;
@@ -223,9 +212,9 @@ loadMoreBtn.addEventListener("click", () => {
     searchImages();
 });
 
-// Load default images on page initialization to fill empty space
+// Load default images on page load
 window.addEventListener('DOMContentLoaded', () => {
-    searchBox.value = "Cinematic"; // Default attractive search term
+    searchBox.value = "Cinematic";
     searchImages();
-    searchBox.value = ""; // Clear the box so the user can easily type
+    searchBox.value = "";
 });

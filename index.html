@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina | Professional Image Search</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Lumina</h1>
+            <p>Discover beautiful, high-resolution imagery for your next project.</p>
+            
+            <form id="search-form" class="search-container">
+                <i class="ph ph-magnifying-glass search-icon"></i>
+                <input type="text" id="search-box" placeholder="Search for aesthetics, nature, tech..." required autocomplete="off">
+                <div class="btn-wrapper">
+                    <button type="submit" class="animated-button">
+                        <span>Search</span>
+                        <span></span>
+                    </button>
+                </div>
+                <ul id="suggestions" class="suggestions-list"></ul>
+            </form>
+        </div>
+    </header>
+
+    <main class="gallery-section">
+        <div class="gallery-container">
+            <div id="images" class="image-grid">
+                <!-- Images will be injected here via JS -->
+            </div>
+            
+            <div class="load-more-container">
+                <button id="load-more" class="load-more-btn">
+                    Load More <i class="ph ph-caret-down"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Image Preview Modal -->
+    <div id="image-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close" class="modal-close-btn">&times;</button>
+            <img id="modal-image" src="" alt="Preview">
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

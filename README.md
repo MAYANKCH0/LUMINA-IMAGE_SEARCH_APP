@@ -78,12 +78,6 @@ This project is deployed using **Vercel** for fast and reliable hosting.
 
 ---
 
-## 📸 Screenshots
-
---ADDED IN SCREENSHOTS FILE
-
----
-
 ## 📈 Future Improvements
 
 * 🔐 Backend integration to secure API keys

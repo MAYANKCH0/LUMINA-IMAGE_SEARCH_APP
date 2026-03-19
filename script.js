@@ -1,6 +1,6 @@
-// Get API key from Vercel environment variable
-// Fallback to placeholder for local testing
-const accessKey = window.UNSPLASH_API_KEY || "YOUR_API_KEY";
+// Unsplash API Access Key
+const accessKey = "UNSPLASH_API_KEY";
+console.log("Lumina App Loaded - Version 1.2");
 
 const form = document.getElementById("search-form");
 const searchBox = document.getElementById("search-box");
@@ -131,7 +131,9 @@ async function searchImages() {
     if (page === 1) currentSearchKeyword = searchBox.value;
     if (!currentSearchKeyword) return;
 
-    const url = `https://api.unsplash.com/search/photos?page=${page}&query=${currentSearchKeyword}&per_page=12&client_id=${accessKey}`;
+    const url = `https://api.unsplash.com/search/photos?page=${page}&query=${currentSearchKeyword}&per_page=12&client_id=${accessKey.trim()}`;
+
+    console.log("Fetching from Unsplash:", url.replace(accessKey.trim(), "REDACTED_KEY")); // Log for debugging, but hide the key in the console log string for privacy if they share screenshots
 
     suggestionsList.classList.remove("active");
 
@@ -141,7 +143,7 @@ async function searchImages() {
 
         if (data.errors) {
             imagesDiv.classList.remove('image-grid');
-            imagesDiv.innerHTML = `<p class="message error-message">Error: ${data.errors[0]}.</p>`;
+            imagesDiv.innerHTML = `<p class="message error-message">Error: ${data.errors[0]}</p>`;
             loadMoreBtn.style.display = "none";
             return;
         }

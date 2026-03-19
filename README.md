@@ -6,7 +6,7 @@ Lumina is a modern and responsive image search web application that allows users
 
 ## 🚀 Live Demo
 
-🔗 [https://your-live-link-here](https://lumina-image-search-app.vercel.app/)
+🔗 https://lumina-image-search-app.vercel.app/
 
 ---
 

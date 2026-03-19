@@ -1,5 +1,5 @@
 // Pixabay API Key (Get yours at https://pixabay.com/api/docs/)
-const pixabayKey = "PIXABAY_API_KEY";
+const pixabayKey = "55091192-73e5b601074d96a41d56a7d02";
 console.log("Lumina App Loaded - Pixabay Version");
 
 const form = document.getElementById("search-form");
